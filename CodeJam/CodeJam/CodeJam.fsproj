@@ -56,6 +56,10 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Input.fs" />
+    <Compile Include="Output.fs" />
+    <Compile Include="2016_1a_rank-and-file.fs" />
+    <Compile Include="CLIArguments.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <Content Include="packages.config" />

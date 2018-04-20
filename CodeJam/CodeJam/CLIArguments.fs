@@ -3,9 +3,12 @@
     type Arguments = {problem:Problem}
     type ParsedArgs = 
         | Args of Arguments
-        | NoValidArgs
+        | NoArgs
         | RepeatedArg of string
         | MissingValue of string
+        | TooManyArgs
+        | BadValue of string * string
+        | BadOption of string
 
     // don't do dispatch to solution modules here, that's beyond the scope of argument parsing
 
@@ -13,24 +16,27 @@
     /// The arguments recognized are as follows:
     /// * --problem <name> : Run the solution to the problem named <name>. <name> can be any of:
     ///     * rank-and-file
-    ///     If any other name is given, an error message will be printed to standard error and
-    ///     the --problem argument will be ignored. If multiple valid --problem arguments are
-    ///     given, an error message will be printed to standard error and RepeatedArg "--problem"
+    ///     If any other name is given, BadValue ("--problem", "<name>") will be returned. If
+    ///     multiple valid --problem arguments are given, RepeatedArg "--problem"
     ///     will be returned.
-    /// If no recognized options are parsed, NoValidArgs will be returned.
+    /// If no options are given, NoArgs will be returned. --problem must be the
+    /// only option, else TooManyArgs will be returned. If an unrecognized option is given,
+    /// BadOption "<opt>" will be returned.
     let rec parseArgs args =
         match args with
         | "--problem"::rest ->
             match rest with
             | "rank-and-file"::rest ->
                 match parseArgs rest with
-                | Args { problem = _ } -> RepeatedArg "--problem"
-                | _ -> Args { problem = RankAndFile }
-            | unrecognized::rest ->
-                eprintfn "Unrecognized problem name passed to --problem: %s" unrecognized
-                parseArgs rest
+                | Args { problem = _ }
+                | RepeatedArg "--problem"
+                | BadValue ("--problem", _)
+                | MissingValue "--problem" -> RepeatedArg "--problem"
+                | NoArgs -> Args { problem = RankAndFile }
+                | _ -> TooManyArgs
+            | unrecognized::_ ->
+                BadValue ("--problem", unrecognized) //eprintfn "Unrecognized problem name passed to --problem: %s" unrecognized
             | [] -> MissingValue "--problem"
-        | unrecognized::rest ->
-            eprintfn "Unrecognized command line argument: %s" unrecognized
-            parseArgs rest
-        | [] -> NoValidArgs
+        | unrecognized::_ ->
+            BadOption unrecognized //eprintfn "Unrecognized command line argument: %s" unrecognized
+        | [] -> NoArgs

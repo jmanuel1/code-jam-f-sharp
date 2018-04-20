@@ -8,7 +8,7 @@
         | MissingValue of string
         | TooManyArgs
         | BadValue of string * string
-        | BadOption of string
+        | BadArg of string
 
     // don't do dispatch to solution modules here, that's beyond the scope of argument parsing
 
@@ -38,5 +38,5 @@
                 BadValue ("--problem", unrecognized) //eprintfn "Unrecognized problem name passed to --problem: %s" unrecognized
             | [] -> MissingValue "--problem"
         | unrecognized::_ ->
-            BadOption unrecognized //eprintfn "Unrecognized command line argument: %s" unrecognized
+            BadArg unrecognized //eprintfn "Unrecognized command line argument: %s" unrecognized
         | [] -> NoArgs

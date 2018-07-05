@@ -18,9 +18,29 @@ let main argv =
     let solution =
         match args with
         | Args { problem = RankAndFile } -> _2016_1a_rank_and_file.solution |> Solution
-        | NoValidArgs ->
+        | NoArgs ->
             printUsage()
             exit 1 // just exit with a non-zero integer instead of throwing an exception
+        | MissingValue arg ->
+            eprintfn "Argument %s was not given a value.\n" arg
+            printUsage()
+            exit 1
+        | RepeatedArg arg ->
+            eprintfn "Argument %s must not be given more than once.\n" arg
+            printUsage()
+            exit 1
+        | BadArg arg ->
+            eprintfn "Argument %s is not recognized.\n" arg
+            printUsage()
+            exit 1
+        | BadValue (arg, value) ->
+            eprintfn "Argument %s was passed with the unrecognized value %s.\n" arg value
+            printUsage()
+            exit 1
+        | TooManyArgs ->
+            eprintfn "Too many arguments were passed.\n"
+            printUsage()
+            exit 1
     // run solution and print output
     solveAndOutput solution
     0 // return an integer exit code

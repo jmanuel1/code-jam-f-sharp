@@ -22,6 +22,7 @@
     /// If no options are given, NoArgs will be returned. --problem must be the
     /// only option, else TooManyArgs will be returned. If an unrecognized option is given,
     /// BadOption "<opt>" will be returned.
+    /// BadArg "<arg>" will be returned.
     let rec parseArgs args =
         match args with
         | "--problem"::rest ->

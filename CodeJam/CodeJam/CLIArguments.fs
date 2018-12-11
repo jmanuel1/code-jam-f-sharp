@@ -1,5 +1,5 @@
 ﻿module CLIArguments
-    type Problem = | RankAndFile
+    type Problem = TheLastWord | RankAndFile
     type Arguments = {problem:Problem}
     type ParsedArgs = 
         | Args of Arguments
@@ -16,12 +16,12 @@
     /// The arguments recognized are as follows:
     /// * --problem <name> : Run the solution to the problem named <name>. <name> can be any of:
     ///     * rank-and-file
+    ///     * the-last-word
     ///     If any other name is given, BadValue ("--problem", "<name>") will be returned. If
     ///     multiple valid --problem arguments are given, RepeatedArg "--problem"
     ///     will be returned.
     /// If no options are given, NoArgs will be returned. --problem must be the
     /// only option, else TooManyArgs will be returned. If an unrecognized option is given,
-    /// BadOption "<opt>" will be returned.
     /// BadArg "<arg>" will be returned.
     let rec parseArgs args =
         match args with
@@ -34,6 +34,14 @@
                 | BadValue ("--problem", _)
                 | MissingValue "--problem" -> RepeatedArg "--problem"
                 | NoArgs -> Args { problem = RankAndFile }
+                | _ -> TooManyArgs
+            | "the-last-word"::rest ->
+                match parseArgs rest with
+                | Args { problem = _ }
+                | RepeatedArg "--problem"
+                | BadValue ("--problem", _)
+                | MissingValue "--problem" -> RepeatedArg "--problem"
+                | NoArgs -> Args { problem = TheLastWord }
                 | _ -> TooManyArgs
             | unrecognized::_ ->
                 BadValue ("--problem", unrecognized) //eprintfn "Unrecognized problem name passed to --problem: %s" unrecognized

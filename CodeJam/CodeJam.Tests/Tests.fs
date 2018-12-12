@@ -6,15 +6,6 @@ open Microsoft.VisualStudio.TestTools.UnitTesting
 [<TestClass>]
 type ``'The Last Word' Tests`` () =
 
-    (* These test what should be internal *)
-    [<TestMethod>]
-    member this.``The last word from CAB is CAB``() =
-        Assert.AreEqual("CAB", _2016_1a_the_last_word.lastWordBuilder "CAB")
-
-    [<TestMethod>]
-    member this.``The last word from JAM is MJA``() =
-        Assert.AreEqual("MJA", _2016_1a_the_last_word.lastWordBuilder "JAM")
-
     [<TestMethod>]
     member this.``Each line is a single test case containing the initial string``() =
         let (Input.ParsedTestCase (Input.Case { _2016_1a_the_last_word.str = actual })) = 

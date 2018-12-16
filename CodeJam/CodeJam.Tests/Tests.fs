@@ -34,3 +34,35 @@ type ``'The Last Word' Tests`` () =
         Assert.AreEqual([1; 2; 3; 4; 5], List.ofSeq actualNumbers, 
             "test output numbered incorrectly")
         Console.SetIn(in')
+
+[<TestClass>]
+type ``'Coin Jam' Tests`` () =
+
+    [<TestMethod>]
+    member this.``Each test case line is parsed``() =
+        let (Input.ParsedTestCase (Input.Case { _2016_qu_coin_jam.coinLength = actualLen; _2016_qu_coin_jam.numOfCoins = actualNum })) = 
+            _2016_qu_coin_jam.testCaseParser "6 3"
+        Assert.AreEqual((6, 3), (actualLen, actualNum))
+
+    //[<TestMethod>]
+    //member this.``Solves and numbers every sample test case``() =
+    //    (* This takes advantage of an internal detail: the use of Console.In *)
+    //    let in' = Console.In
+    //    Console.SetIn(new IO.StringReader(
+    //        "5\n" +
+    //        "CAB\n" +
+    //        "JAM\n" +
+    //        "CODE\n" +
+    //        "ABAAB\n" +
+    //        "CABCBBABC\n"
+    //    ))
+    //    let actual = _2016_1a_the_last_word.solution |> Seq.toList
+    //    let actualOutput = 
+    //        List.map (fun { Output.output = actual } -> actual) actual
+    //    let actualNumbers = 
+    //        List.map (fun { Output.caseNumber = actual } -> actual) actual
+    //    Assert.AreEqual(["CAB"; "MJA"; "OCDE"; "BBAAA"; "CCCABBBAB"], 
+    //        List.ofSeq actualOutput, "last word output is wrong")
+    //    Assert.AreEqual([1; 2; 3; 4; 5], List.ofSeq actualNumbers, 
+    //        "test output numbered incorrectly")
+    //    Console.SetIn(in')

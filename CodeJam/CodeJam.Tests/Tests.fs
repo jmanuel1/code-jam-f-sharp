@@ -55,7 +55,7 @@ type ``'Coin Jam' Tests`` () =
         Assert.AreEqual(1, number)
         Assert.IsTrue(List.isEmpty rest)
 
-        let lines = output.Split('\n')
+        let lines = output.TrimStart().Split('\n')
         let resultsArray = lines |> Array.map (fun line -> line.Split(' '))
         resultsArray |> Array.iter (fun result ->
             let coin = result.[0]

@@ -59,18 +59,21 @@ type ``'Coin Jam' Tests`` () =
         let resultsArray = lines |> Array.map (fun line -> line.Split(' '))
         resultsArray |> Array.iter (fun result ->
             let coin = result.[0]
-            let factors = result.[1..]
-            Array.iteri (fun i factor ->
-                let radix = i + 2
-                let value = this.parseWithRadix(coin, radix)
+            let factorsForTesting = [
+                (2, result.[1])
+                (8, result.[7])
+                (10, result.[9])
+            ] 
+            factorsForTesting |> List.iter (fun (radix, factor) ->
+                (* Test only for bases 2, 8, 10 since custom implementation is 
+                   needed for other bases, and that is already done in the
+                   Coin Jam code *)
+                let value = Convert.ToInt32(coin, radix)
                 Assert.AreEqual(0, value % int factor)
-            ) factors
+            ) 
         )
+
         Console.SetIn(in')
 
-    member private this.parseWithRadix(coin, radix) =
-        let folder = fun (acc, place) digit ->
-            (acc + (int digit)*(pown radix place), place - 1)
-        let (value, _) = 
-            List.fold folder (0, String.length coin - 1) <| List.ofSeq coin
-        value
+    (* TODO: test that the correct number of coins are mined
+       and that Case #x: is on its own line *)

@@ -51,6 +51,8 @@
                     (List.append factors [3], isPrime)
                 else factorSearch()) ([], false)
         let primeTest = Enumerable.Range(2, 11) |> findFactorsInBases
+        (* Range takes parameters start, count: count is number of items including start *)
+        let primeTest = Enumerable.Range(2, 9) |> findFactorsInBases
         match primeTest with
         | (_, true) -> None
         | (factors, _) -> Some factors

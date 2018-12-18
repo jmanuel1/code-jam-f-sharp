@@ -75,5 +75,19 @@ type ``'Coin Jam' Tests`` () =
 
         Console.SetIn(in')
 
+    [<TestMethod>]
+    member this.``Outputs 9 factors for bases 2-10``() =
+        (* This takes advantage of an internal detail: the use of Console.In *)
+        let in' = Console.In
+        Console.SetIn(new IO.StringReader("1\n6 3"))
+        let { Output.output = output } = 
+            _2016_qu_coin_jam.solution |> Seq.head
+        let lines = output.TrimStart().Split('\n')
+        let resultsArray = lines |> Array.map (fun line -> line.Split(' '))
+        resultsArray |> Array.iter (fun result ->
+            Assert.AreEqual(9, Array.length result.[1..])
+        )
+        Console.SetIn(in')
+
     (* TODO: test that the correct number of coins are mined
        and that Case #x: is on its own line *)

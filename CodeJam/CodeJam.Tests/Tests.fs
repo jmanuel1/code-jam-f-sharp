@@ -48,7 +48,8 @@ type ``'Coin Jam' Tests`` () =
     member this.``Generates valid jamcoins with correct test case numbers``() =
         (* This takes advantage of an internal detail: the use of Console.In *)
         let in' = Console.In
-        Console.SetIn(new IO.StringReader("1\n6 3"))
+        (* Use 16 and 50 to test handling of large numbers *)
+        Console.SetIn(new IO.StringReader("1\n16 50"))
         let { Output.output = output; Output.caseNumber = number }::rest = 
             _2016_qu_coin_jam.solution |> Seq.toList
 
@@ -68,8 +69,8 @@ type ``'Coin Jam' Tests`` () =
                 (* Test only for bases 2, 8, 10 since custom implementation is 
                    needed for other bases, and that is already done in the
                    Coin Jam code *)
-                let value = Convert.ToInt32(coin, radix)
-                Assert.AreEqual(0, value % int factor)
+                let value = Convert.ToInt64(coin, radix)
+                Assert.AreEqual(int64 0, value % int64 factor)
             ) 
         )
 

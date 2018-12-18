@@ -4,9 +4,14 @@ open Output
 type Solution = | Solution of seq<TestCaseOutput>
 
 let usageMessage =
-    "This program takes a single argument --problem which can take the following values\n" +
-    "rank-and-file : run a solution to the 2016 Round 1a 'Rank and File' problem\n" +
-    "the-last-word : run a solution to the 2016 Round 1a 'The Last Word' problem\n\n" +
+    "This program takes a single argument --problem which can take the " +
+    "following values\n" +
+    "rank-and-file : run a solution to the 2016 Round 1a 'Rank and File' " +
+    "problem\n" +
+    "the-last-word : run a solution to the 2016 Round 1a 'The Last Word' " +
+    "problem\n" + 
+    "coin-jam : run a solution to the 2016 Qualification Round 'Coin Jam' " +
+    "problem\n\n" +
     "Input, just like in the real CodeJam, is fed through standard input."
 let printUsage () = printfn "%s" usageMessage
 
@@ -25,7 +30,8 @@ let handleArgParsingError err =
         | BadArg arg ->
             sprintf "Argument %s is not recognized.\n" arg
         | BadValue (arg, value) ->
-            sprintf "Argument %s was passed with the unrecognized value %s.\n" arg value
+            (sprintf "Argument %s was passed with the unrecognized value %s.\n" 
+                arg value)
         | TooManyArgs ->
             "Too many arguments were passed.\n"
         | Args _ ->
@@ -43,8 +49,11 @@ let main argv =
     let args = Array.toList argv |> parseArgs
     let solution =
         match args with
-        | Args { problem = RankAndFile } -> _2016_1a_rank_and_file.solution |> Solution
-        | Args { problem = TheLastWord } -> _2016_1a_the_last_word.solution |> Solution
+        | Args { problem = RankAndFile } -> 
+            _2016_1a_rank_and_file.solution |> Solution
+        | Args { problem = TheLastWord } -> 
+            _2016_1a_the_last_word.solution |> Solution
+        | Args { problem = CoinJam } -> _2016_qu_coin_jam.solution |> Solution
         | err -> handleArgParsingError err
     // run solution and print output
     solveAndOutput solution

@@ -121,48 +121,20 @@ type ``'Rank and File' Tests`` () =
             [1; 2; 3]
         ]), (n, lists))
 
-    //[<TestMethod>]
-    //member this.``Generates valid jamcoins with correct test case numbers``() =
-    //    (* This takes advantage of an internal detail: the use of Console.In *)
-    //    let in' = Console.In
-    //    (* Use 16 and 50 to test handling of large numbers *)
-    //    Console.SetIn(new IO.StringReader("1\n16 50"))
-    //    let { Output.output = output; Output.caseNumber = number }::rest = 
-    //        _2016_qu_coin_jam.solution |> Seq.toList
+    [<TestMethod>]
+    member this.``Generates a complete grid from each test case with corect test case numbers``() =
+        (* This takes advantage of an internal detail: the use of Console.In *)
+        let in' = Console.In
+        let inString = "1\n3\n1 2 3\n2 3 5\n3 5 6\n2 3 4\n1 2 3"
+        let input = new IO.StringReader(inString)
+        Console.SetIn(input)
 
-    //    Assert.AreEqual(1, number)
-    //    Assert.IsTrue(List.isEmpty rest)
+        let { Output.output = output; Output.caseNumber = number }::rest = 
+            _2016_1a_rank_and_file.solution |> Seq.toList
 
-    //    let lines = output.TrimStart().Split('\n')
-    //    let resultsArray = lines |> Array.map (fun line -> line.Split(' '))
-    //    resultsArray |> Array.iter (fun result ->
-    //        let coin = result.[0]
-    //        let factorsForTesting = [
-    //            (2, result.[1])
-    //            (8, result.[7])
-    //            (10, result.[9])
-    //        ] 
-    //        factorsForTesting |> List.iter (fun (radix, factor) ->
-    //            (* Test only for bases 2, 8, 10 since custom implementation is 
-    //               needed for other bases, and that is already done in the
-    //               Coin Jam code *)
-    //            let value = Convert.ToInt64(coin, radix)
-    //            Assert.AreEqual(int64 0, value % int64 factor)
-    //        ) 
-    //    )
+        Assert.AreEqual(1, number)
+        Assert.IsTrue(List.isEmpty rest)
 
-    //    Console.SetIn(in')
+        Assert.AreEqual("3 4 6", output)
 
-    //[<TestMethod>]
-    //member this.``Outputs 9 factors for bases 2-10``() =
-    //    (* This takes advantage of an internal detail: the use of Console.In *)
-    //    let in' = Console.In
-    //    Console.SetIn(new IO.StringReader("1\n6 3"))
-    //    let { Output.output = output } = 
-    //        _2016_qu_coin_jam.solution |> Seq.head
-    //    let lines = output.TrimStart().Split('\n')
-    //    let resultsArray = lines |> Array.map (fun line -> line.Split(' '))
-    //    resultsArray |> Array.iter (fun result ->
-    //        Assert.AreEqual(9, Array.length result.[1..])
-    //    )
-    //    Console.SetIn(in')
+        Console.SetIn(in')

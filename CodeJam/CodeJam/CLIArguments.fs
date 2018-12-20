@@ -30,32 +30,20 @@
         match args with
         | "--problem"::rest ->
             match rest with
-            | "rank-and-file"::rest ->
+            | problem::rest ->
+                let argRepresentation = 
+                    match problem with
+                    | "rank-and-file" -> Args { problem = RankAndFile }
+                    | "the-last-word" -> Args { problem = TheLastWord }
+                    | "coin-jam" -> Args { problem = CoinJam }
+                    | _ -> BadValue ("--problem", problem)
                 match parseArgs rest with
                 | Args { problem = _ }
                 | RepeatedArg "--problem"
                 | BadValue ("--problem", _)
                 | MissingValue "--problem" -> RepeatedArg "--problem"
-                | NoArgs -> Args { problem = RankAndFile }
+                | NoArgs -> argRepresentation
                 | _ -> TooManyArgs
-            | "the-last-word"::rest ->
-                match parseArgs rest with
-                | Args { problem = _ }
-                | RepeatedArg "--problem"
-                | BadValue ("--problem", _)
-                | MissingValue "--problem" -> RepeatedArg "--problem"
-                | NoArgs -> Args { problem = TheLastWord }
-                | _ -> TooManyArgs
-            | "coin-jam"::rest ->
-                match parseArgs rest with
-                | Args { problem = _ }
-                | RepeatedArg "--problem"
-                | BadValue ("--problem", _)
-                | MissingValue "--problem" -> RepeatedArg "--problem"
-                | NoArgs -> Args { problem = CoinJam }
-                | _ -> TooManyArgs
-            | unrecognized::_ ->
-                BadValue ("--problem", unrecognized)
             | [] -> MissingValue "--problem"
         | unrecognized::_ ->
             BadArg unrecognized

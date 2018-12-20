@@ -101,7 +101,15 @@ type ``'Coin Jam' Tests`` () =
         Assert.AreEqual(3, Array.length lines)
         Console.SetIn(in')
 
-    (* TODO: test that Case #x: is on its own line *)
+    [<TestMethod>]
+    member this.``'Case #x:' is put on its own line in the output``() =
+        (* This takes advantage of an internal detail: the use of Console.In *)
+        let in' = Console.In
+        Console.SetIn(new IO.StringReader("1\n6 3"))
+        let { Output.output = output } = 
+            _2016_qu_coin_jam.solution |> Seq.head
+        Assert.AreEqual('\n', output.[0])
+        Console.SetIn(in')
 
 [<TestClass>]
 type ``'Rank and File' Tests`` () =

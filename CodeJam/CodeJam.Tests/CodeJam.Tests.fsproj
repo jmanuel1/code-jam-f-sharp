@@ -47,7 +47,8 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Tests.fs" />
+    <Compile Include="UnitTests.fs" />
+    <Compile Include="SystemTests.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -92,3 +92,77 @@ type ``'Coin Jam' Tests`` () =
 
     (* TODO: test that the correct number of coins are mined
        and that Case #x: is on its own line *)
+
+[<TestClass>]
+type ``'Rank and File' Tests`` () =
+
+    [<TestMethod>]
+    member this.``Can parse each test case``() =
+        let unwrapParser (Input.Parser p) = p
+        let rec chainParser p lines = 
+            match lines with
+            | [line] -> p line
+            | line::rest -> chainParser (p line |> unwrapParser) rest
+        let (Input.ParsedTestCase (Input.Case { _2016_1a_rank_and_file.n = n;
+            _2016_1a_rank_and_file.lists = lists })) = 
+            chainParser _2016_1a_rank_and_file.testCaseParser [
+                "3"
+                "1 2 3"
+                "2 3 5"
+                "3 5 6"
+                "2 3 4"
+                "1 2 3"
+            ]
+        Assert.AreEqual((3, [
+            [1; 2; 3]
+            [2; 3; 5]
+            [3; 5; 6]
+            [2; 3; 4]
+            [1; 2; 3]
+        ]), (n, lists))
+
+    //[<TestMethod>]
+    //member this.``Generates valid jamcoins with correct test case numbers``() =
+    //    (* This takes advantage of an internal detail: the use of Console.In *)
+    //    let in' = Console.In
+    //    (* Use 16 and 50 to test handling of large numbers *)
+    //    Console.SetIn(new IO.StringReader("1\n16 50"))
+    //    let { Output.output = output; Output.caseNumber = number }::rest = 
+    //        _2016_qu_coin_jam.solution |> Seq.toList
+
+    //    Assert.AreEqual(1, number)
+    //    Assert.IsTrue(List.isEmpty rest)
+
+    //    let lines = output.TrimStart().Split('\n')
+    //    let resultsArray = lines |> Array.map (fun line -> line.Split(' '))
+    //    resultsArray |> Array.iter (fun result ->
+    //        let coin = result.[0]
+    //        let factorsForTesting = [
+    //            (2, result.[1])
+    //            (8, result.[7])
+    //            (10, result.[9])
+    //        ] 
+    //        factorsForTesting |> List.iter (fun (radix, factor) ->
+    //            (* Test only for bases 2, 8, 10 since custom implementation is 
+    //               needed for other bases, and that is already done in the
+    //               Coin Jam code *)
+    //            let value = Convert.ToInt64(coin, radix)
+    //            Assert.AreEqual(int64 0, value % int64 factor)
+    //        ) 
+    //    )
+
+    //    Console.SetIn(in')
+
+    //[<TestMethod>]
+    //member this.``Outputs 9 factors for bases 2-10``() =
+    //    (* This takes advantage of an internal detail: the use of Console.In *)
+    //    let in' = Console.In
+    //    Console.SetIn(new IO.StringReader("1\n6 3"))
+    //    let { Output.output = output } = 
+    //        _2016_qu_coin_jam.solution |> Seq.head
+    //    let lines = output.TrimStart().Split('\n')
+    //    let resultsArray = lines |> Array.map (fun line -> line.Split(' '))
+    //    resultsArray |> Array.iter (fun result ->
+    //        Assert.AreEqual(9, Array.length result.[1..])
+    //    )
+    //    Console.SetIn(in')

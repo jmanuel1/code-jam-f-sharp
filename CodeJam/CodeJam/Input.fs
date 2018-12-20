@@ -5,7 +5,9 @@
     type TestCase<'a> = | Case of 'a
     let extractCase (Case case) = case
 
-    type TestCaseParser<'a> = Parser of (string -> TestCaseParser<'a>) | ParsedTestCase of TestCase<'a>
+    type TestCaseParser<'a> =
+        | Parser of (string -> TestCaseParser<'a>) 
+        | ParsedTestCase of TestCase<'a>
     type NumberedTestCase<'a> = {case:'a; number:int}
 
     // Grab the number of test cases
@@ -19,7 +21,8 @@
 
     let allTestCases caseParser =
         seq { for number in { 1 .. (getNumTestCases() |> numCasesToInt) }
-            do yield { case = getNextTestCase caseParser |> extractCase; number = number } }
-
-    // Example test case parser (it just captures an integer)
-    let _exampleParser (line:string) = line |> int |> Case |> ParsedTestCase
+            do yield { 
+                case = getNextTestCase caseParser |> extractCase
+                number = number
+            } 
+        }

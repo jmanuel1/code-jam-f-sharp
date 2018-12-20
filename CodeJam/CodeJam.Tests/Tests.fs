@@ -90,8 +90,18 @@ type ``'Coin Jam' Tests`` () =
         )
         Console.SetIn(in')
 
-    (* TODO: test that the correct number of coins are mined
-       and that Case #x: is on its own line *)
+    [<TestMethod>]
+    member this.``Mines the correct number of coins``() =
+        (* This takes advantage of an internal detail: the use of Console.In *)
+        let in' = Console.In
+        Console.SetIn(new IO.StringReader("1\n6 3"))
+        let { Output.output = output } = 
+            _2016_qu_coin_jam.solution |> Seq.head
+        let lines = output.TrimStart().Split('\n')
+        Assert.AreEqual(3, Array.length lines)
+        Console.SetIn(in')
+
+    (* TODO: test that Case #x: is on its own line *)
 
 [<TestClass>]
 type ``'Rank and File' Tests`` () =

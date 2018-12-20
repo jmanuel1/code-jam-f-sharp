@@ -3,6 +3,7 @@
     open Output
     open System.Linq
     open System
+    open System.Numerics
 
     type TestData = {coinLength:int; numOfCoins:int}
 
@@ -15,11 +16,13 @@
             numOfCoins = numOfCoins 
         } |> Case |> ParsedTestCase
     
-    let parseWithRadix coin radix =
+    let parseWithRadix coin (radix:int) =
+        let radix' = bigint radix
         let folder = fun (acc, place) digit ->
-            (acc + (int digit)*(pown radix place), place - 1)
+            (acc + (string digit |> bigint.Parse)*(pown radix' place), 
+                place - 1)
         let (value, _) = 
-            List.fold folder (0, String.length coin - 1) <| List.ofSeq coin
+            List.fold folder (0I, String.length coin - 1) <| List.ofSeq coin
         value
 
     let validate coin =
@@ -29,29 +32,31 @@
                 let num = parseWithRadix coin radix
                 let factorSearch() =
                     let primishFilter = 
-                        Seq.filter (fun i -> i*i <= num && (i + 1) % 6 = 0)
-                    let findFactors = Seq.fold (fun (factors, isPrime) i ->
+                        Seq.filter (fun (i:int) -> 
+                            let i' = bigint i
+                            i'*i' <= num && (i' + 1I) % 6I = 0I)
+                    let factorsFolder = (fun (factors, isPrime) (i:int) ->
+                        let i' = bigint i
                         if not isPrime then (factors, false)
                         else
-                            if num % i = 0 then
-                                (List.append factors [i], false)
-                            elif num % (i + 2) = 0 then
-                                (List.append factors [i + 2], false)
-                            else (factors, isPrime)) (factors, true)
+                            if num % i' = 0I then
+                                (List.append factors [i'], false)
+                            elif num % (i' + 2I) = 0I then
+                                (List.append factors [i' + 2I], false)
+                            else (factors, isPrime))
+                    let findFactors = Seq.fold factorsFolder (factors, true)
                     Enumerable.Range(5, 299700) |> primishFilter |> findFactors
                 (* prime test taken from 
                    https://en.wikipedia.org/wiki/Primality_test *)
-                if num <= 1 then
-                    (factors, isPrime)
-                elif num <= 3 then
-                    (factors, true)
-                elif num % 2 = 0 then
-                    (List.append factors [2], isPrime)
-                elif num % 3 = 0 then
-                    (List.append factors [3], isPrime)
+                if num <= 3I then
+                    (factors, num > 1I || isPrime)
+                elif num % 2I = 0I then
+                    (List.append factors [2I], isPrime)
+                elif num % 3I = 0I then
+                    (List.append factors [3I], isPrime)
                 else factorSearch()) ([], false)
-        let primeTest = Enumerable.Range(2, 11) |> findFactorsInBases
-        (* Range takes parameters start, count: count is number of items including start *)
+        (* Range takes parameters start, count: count is number of items 
+           including start *)
         let primeTest = Enumerable.Range(2, 9) |> findFactorsInBases
         match primeTest with
         | (_, true) -> None
@@ -62,8 +67,8 @@
             for case in allTestCases testCaseParser do
                 let { coinLength = coinLength; numOfCoins = numOfCoins } = 
                     case.case
-                let findAndOutputCoinFromVar = fun (coinNumber, output) (var:int) ->
-                    let possiblyOutputCoin coin =
+                let findAndOutputCoinFromVar = 
+                    let possiblyOutputCoin coin coinNumber output =
                         match validate coin with
                         | Some factors -> 
                             let factorsString = String.Join(" ", factors)
@@ -71,16 +76,17 @@
                                 sprintf "%s\n%s %s" output coin factorsString
                             (coinNumber + 1, newOutput)
                         | None -> (coinNumber, output)
-                    if coinNumber > numOfCoins then
-                        (coinNumber, output) (* Do nothing. *)
-                    else
-                        let strVar = Convert.ToString(var, 2)
-                        let numberOfPadZeros = 
-                            coinLength - 2 - String.length strVar
-                        let zeroPaddedStrVar = 
-                            String.replicate numberOfPadZeros "0" + strVar
-                        let coin = "1" + zeroPaddedStrVar + "1" 
-                        possiblyOutputCoin coin
+                    fun (coinNumber, output) (var:int) ->
+                        if coinNumber > numOfCoins then
+                            (coinNumber, output) (* Do nothing. *)
+                        else
+                            let strVar = Convert.ToString(var, 2)
+                            let numberOfPadZeros = 
+                                coinLength - 2 - String.length strVar
+                            let zeroPaddedStrVar = 
+                                String.replicate numberOfPadZeros "0" + strVar
+                            let coin = "1" + zeroPaddedStrVar + "1" 
+                            possiblyOutputCoin coin coinNumber output
                 let findCoinsFromVars = 
                     Seq.fold findAndOutputCoinFromVar (1, "")
                 let varRange = Enumerable.Range(0, pown 2 (coinLength - 2))

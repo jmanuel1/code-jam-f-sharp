@@ -30,16 +30,11 @@ let handleArgParsingError err =
         | BadArg arg ->
             sprintf "Argument %s is not recognized.\n" arg
         | BadValue (arg, value) ->
-            (sprintf "Argument %s was passed with the unrecognized value %s.\n" 
+            (sprintf "Argument %s was passed with the unrecognized value %s.\n"
                 arg value)
         | TooManyArgs ->
             "Too many arguments were passed.\n"
-        | Args _ ->
-            // the code is quite wrong if it gets here
-            let errMsg =
-                "CLI arguments were parsed but treated as an error. " +
-                "Perhaps a match expression is wrong somewhere (in main?)?"
-            invalidArg "err" errMsg
+        (* Purposely not match Args _ b/c it wouldn't make sense to do so. *)
     eprintfn "%s" message
     printUsage()
     exit 1

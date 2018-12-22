@@ -92,3 +92,44 @@ type ``When no arguments or invalid arguments are passed``() =
             codejam.Close()
         )
         Console.SetError(originalError)
+
+[<TestClass>]
+type ``When given '--problem rank-and-file' as arguments``() =
+
+    [<TestMethod>]
+    member this.``Wait for input from stdin without output``() =
+        (* This test requires the CodeJam project to be built first. 
+           And the working directory must be the configuration directory. 
+           (That is, the default.) *)
+        let codejamInfo = 
+            new Diagnostics.ProcessStartInfo(
+                WindowStyle = Diagnostics.ProcessWindowStyle.Hidden,
+                FileName = "..\\..\\..\\CodeJam\\bin\\Debug\\CodeJam.exe",
+                Arguments = "--problem rank-and-file",
+                RedirectStandardOutput = true,
+                UseShellExecute = false
+            )
+        let codejam = new Diagnostics.Process(StartInfo = codejamInfo)
+        codejam.Start() |> ignore
+        codejam.WaitForExit(1000) |> ignore
+        codejam.Kill()
+        let output = new StringBuilder(codejam.StandardOutput.ReadToEnd())
+        Assert.IsTrue(String.IsNullOrWhiteSpace(string output), 
+            "output was '" + string output + "'")
+        
+        codejam.Close()
+
+    [<TestMethod>]
+    member this.``Write output to stdout based on stdin``() =
+        let originalIn = Console.In
+        let originalOut = Console.Out
+        let newIn =
+            new IO.StringReader("1\n3\n1 2 3\n2 3 5\n3 5 6\n2 3 4\n1 2 3")
+        let newOut = new IO.StringWriter()
+        Console.SetIn(newIn)
+        Console.SetOut(newOut)
+        Program.main [|"--problem"; "rank-and-file"|] |> ignore
+        let output = string newOut
+        Assert.IsTrue(output.Contains("Case #"))
+        Console.SetIn(originalIn)
+        Console.SetOut(originalOut)

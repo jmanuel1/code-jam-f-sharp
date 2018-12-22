@@ -93,6 +93,40 @@ type ``When no arguments or invalid arguments are passed``() =
         )
         Console.SetError(originalError)
 
+    [<TestMethod>]
+    member this.``Return an exit code of one``() =
+        let possibilities = [
+            [||]
+            [|"--problem"|]
+            [|"--problem"; "coin-jam"; "--problem"|]
+            [|"--gibberish"|]
+        ]
+        possibilities |> List.iter (fun args ->
+            (* The following line causes the test runner to abort without
+               telling me why. I think this happens because there is an
+               `exit 1` in handleArgParsingError. *)
+            //Program.main args |> ignore
+            (* Since there is an exit, the test will have to drive the program 
+               from the command line. *)
+            (* Also, this test requires the CodeJam project to be built first. 
+               And the working directory must be the configuration directory. 
+               (That is, the default.)
+               *)
+            let codejamInfo = 
+                new Diagnostics.ProcessStartInfo(
+                    WindowStyle = Diagnostics.ProcessWindowStyle.Hidden,
+                    FileName = "..\\..\\..\\CodeJam\\bin\\Debug\\CodeJam.exe",
+                    Arguments = String.Join(" ", args),
+                    UseShellExecute = false
+                )
+            let codejam = new Diagnostics.Process(StartInfo = codejamInfo)
+            codejam.Start() |> ignore
+            codejam.WaitForExit()
+            let exitCode = codejam.ExitCode
+            Assert.AreEqual(1, exitCode)
+            codejam.Close()
+        )
+
 [<TestClass>]
 type ``When given '--problem rank-and-file' as arguments``() =
 

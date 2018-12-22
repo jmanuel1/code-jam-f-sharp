@@ -133,3 +133,20 @@ type ``When given '--problem rank-and-file' as arguments``() =
         Assert.IsTrue(output.Contains("Case #"))
         Console.SetIn(originalIn)
         Console.SetOut(originalOut)
+
+[<TestClass>]
+type ``Upon success``()=
+
+    [<TestMethod>]
+    member this.``Return an exit code of zero``() =
+        let originalIn = Console.In
+        let originalOut = Console.Out
+        let newIn =
+            new IO.StringReader("1\n3\n1 2 3\n2 3 5\n3 5 6\n2 3 4\n1 2 3")
+        let newOut = new IO.StringWriter()
+        Console.SetIn(newIn)
+        Console.SetOut(newOut)
+        let exitCode = Program.main [|"--problem"; "rank-and-file"|]
+        Assert.AreEqual(0, exitCode)
+        Console.SetIn(originalIn)
+        Console.SetOut(originalOut)

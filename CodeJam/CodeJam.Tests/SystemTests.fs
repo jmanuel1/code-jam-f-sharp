@@ -7,18 +7,15 @@ open System.Text
 [<TestClass>]
 type ``When no arguments or invalid arguments are passed``() =
         
-    [<TestMethod>]
-    member this.``Display a usage message in stdout``() =
-        let originalOut = Console.Out
-        let possibilities = [
-            [||]
-            [|"--problem"|]
-            [|"--problem"; "coin-jam"; "--problem"|]
-            [|"--gibberish"|]
-        ]
-        possibilities |> List.iter (fun args ->
-            let newOut = new IO.StringWriter()
-            Console.SetOut(newOut)
+    member this.possibleInvalidArguments = [
+        [||]
+        [|"--problem"|]
+        [|"--problem"; "coin-jam"; "--problem"|]
+        [|"--gibberish"|]
+    ]
+
+    member this.testOverPossibleInvalidArguments(test) =
+        this.possibleInvalidArguments |> List.iter (fun args ->
             (* The following line causes the test runner to abort without
                telling me why. I think this happens because there is an
                `exit 1` in handleArgParsingError. *)
@@ -29,102 +26,46 @@ type ``When no arguments or invalid arguments are passed``() =
                And the working directory must be the configuration directory. 
                (That is, the default.)
                *)
-            let codejamInfo = 
+            let codejamInfo =
                 new Diagnostics.ProcessStartInfo(
                     WindowStyle = Diagnostics.ProcessWindowStyle.Hidden,
                     FileName = "..\\..\\..\\CodeJam\\bin\\Debug\\CodeJam.exe",
                     Arguments = String.Join(" ", args),
                     RedirectStandardOutput = true,
-                    UseShellExecute = false
-                )
-            let codejam = new Diagnostics.Process(StartInfo = codejamInfo)
-            codejam.Start() |> ignore
-            (* to avoid deadlocks: see Process.StandardOutput docs *)
-            let output = new StringBuilder(codejam.StandardOutput.ReadToEnd())
-            codejam.WaitForExit()
-            output.Append(codejam.StandardOutput.ReadToEnd()) |> ignore
-            Assert.IsFalse(String.IsNullOrWhiteSpace(string output), 
-                "output was '" + string output + "'")
-            newOut.Close()
-            codejam.Close()
-        )
-        Console.SetOut(originalOut)
-
-    [<TestMethod>]
-    member this.``Display an error message in stderr``() =
-        let originalError = Console.Error
-        let possibilities = [
-            [||]
-            [|"--problem"|]
-            [|"--problem"; "coin-jam"; "--problem"|]
-            [|"--gibberish"|]
-        ]
-        possibilities |> List.iter (fun args ->
-            let newError = new IO.StringWriter()
-            Console.SetError(newError)
-            (* The following line causes the test runner to abort without
-               telling me why. I think this happens because there is an
-               `exit 1` in handleArgParsingError. *)
-            //Program.main args |> ignore
-            (* Since there is an exit, the test will have to drive the program 
-               from the command line. *)
-            (* Also, this test requires the CodeJam project to be built first. 
-               And the working directory must be the configuration directory. 
-               (That is, the default.)
-               *)
-            let codejamInfo = 
-                new Diagnostics.ProcessStartInfo(
-                    WindowStyle = Diagnostics.ProcessWindowStyle.Hidden,
-                    FileName = "..\\..\\..\\CodeJam\\bin\\Debug\\CodeJam.exe",
-                    Arguments = String.Join(" ", args),
                     RedirectStandardError = true,
                     UseShellExecute = false
                 )
             let codejam = new Diagnostics.Process(StartInfo = codejamInfo)
             codejam.Start() |> ignore
             (* to avoid deadlocks: see Process.StandardOutput docs *)
+            let output = new StringBuilder(codejam.StandardOutput.ReadToEnd())
             let error = new StringBuilder(codejam.StandardError.ReadToEnd())
             codejam.WaitForExit()
+            output.Append(codejam.StandardOutput.ReadToEnd()) |> ignore
             error.Append(codejam.StandardError.ReadToEnd()) |> ignore
-            Assert.IsFalse(String.IsNullOrWhiteSpace(string error), 
-                "error was '" + string error + "'")
-            newError.Close()
+            test codejam (string output) (string error)
             codejam.Close()
         )
-        Console.SetError(originalError)
+
+    [<TestMethod>]
+    member this.``Display a usage message in stdout``() =
+        this.testOverPossibleInvalidArguments (fun _ output _ ->
+            Assert.IsFalse(String.IsNullOrWhiteSpace(output), 
+                "output was '" + string output + "'")
+        )
+
+    [<TestMethod>]
+    member this.``Display an error message in stderr``() =
+        this.testOverPossibleInvalidArguments (fun _ _ error ->
+            Assert.IsFalse(String.IsNullOrWhiteSpace(error), 
+                "error was '" + string error + "'")
+        )
 
     [<TestMethod>]
     member this.``Return an exit code of one``() =
-        let possibilities = [
-            [||]
-            [|"--problem"|]
-            [|"--problem"; "coin-jam"; "--problem"|]
-            [|"--gibberish"|]
-        ]
-        possibilities |> List.iter (fun args ->
-            (* The following line causes the test runner to abort without
-               telling me why. I think this happens because there is an
-               `exit 1` in handleArgParsingError. *)
-            //Program.main args |> ignore
-            (* Since there is an exit, the test will have to drive the program 
-               from the command line. *)
-            (* Also, this test requires the CodeJam project to be built first. 
-               And the working directory must be the configuration directory. 
-               (That is, the default.)
-               *)
-            let codejamInfo = 
-                new Diagnostics.ProcessStartInfo(
-                    WindowStyle = Diagnostics.ProcessWindowStyle.Hidden,
-                    FileName = "..\\..\\..\\CodeJam\\bin\\Debug\\CodeJam.exe",
-                    Arguments = String.Join(" ", args),
-                    UseShellExecute = false
-                )
-            let codejam = new Diagnostics.Process(StartInfo = codejamInfo)
-            codejam.Start() |> ignore
-            codejam.WaitForExit()
+        this.testOverPossibleInvalidArguments (fun codejam _ _ ->
             let exitCode = codejam.ExitCode
             Assert.AreEqual(1, exitCode)
-            codejam.Close()
         )
 
 [<TestClass>]

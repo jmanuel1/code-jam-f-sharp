@@ -5,10 +5,9 @@ open Microsoft.VisualStudio.TestTools.UnitTesting
 open System.Text
 
 [<TestClass>]
-type ``When no arguments or invalid arguments are passed``() =
+type ``When invalid arguments are passed``() =
         
     member this.possibleInvalidArguments = [
-        [||]
         [|"--problem"|]
         [|"--problem"; "coin-jam"; "--problem"|]
         [|"--gibberish"|]
@@ -124,4 +123,16 @@ type ``Upon success``()=
         let exitCode = Program.main [|"--problem"; "rank-and-file"|]
         Assert.AreEqual(0, exitCode)
         Console.SetIn(originalIn)
+        Console.SetOut(originalOut)
+
+[<TestClass>]
+type ``Gives a help message``()=
+
+    [<TestMethod>]
+    member this.``When passed no arguments``() =
+        let originalOut = Console.Out
+        let newOut = new IO.StringWriter()
+        Console.SetOut(newOut)
+        Program.main [||] |> ignore
+        Assert.IsFalse(string newOut |> String.IsNullOrWhiteSpace)
         Console.SetOut(originalOut)

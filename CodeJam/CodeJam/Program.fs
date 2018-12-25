@@ -21,8 +21,6 @@ let solveAndOutput (Solution solution) =
 let handleArgParsingError err =
     let message =
         match err with
-        | NoArgs ->
-            "No arguments were passed.\n"
         | MissingValue arg ->
             sprintf "Argument %s was not given a value.\n" arg
         | RepeatedArg arg ->
@@ -42,14 +40,17 @@ let handleArgParsingError err =
 [<EntryPoint>]
 let main argv = 
     let args = Array.toList argv |> parseArgs
-    let solution =
-        match args with
-        | Args { problem = RankAndFile } -> 
-            _2016_1a_rank_and_file.solution |> Solution
-        | Args { problem = TheLastWord } -> 
-            _2016_1a_the_last_word.solution |> Solution
-        | Args { problem = CoinJam } -> _2016_qu_coin_jam.solution |> Solution
-        | err -> handleArgParsingError err
-    // run solution and print output
-    solveAndOutput solution
+    match args with
+    | Args { problem = problem } ->
+        let solution = 
+            match problem with
+            | RankAndFile -> 
+                _2016_1a_rank_and_file.solution |> Solution
+            | TheLastWord -> 
+                _2016_1a_the_last_word.solution |> Solution
+            | CoinJam -> _2016_qu_coin_jam.solution |> Solution
+        // run solution and print output
+        solveAndOutput solution
+    | NoArgs -> printUsage()
+    | err -> handleArgParsingError err
     0 // return an integer exit code

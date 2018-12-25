@@ -23,7 +23,7 @@
     ///     If any other name is given, BadValue ("--problem", "<name>") will 
     ///     be returned. If multiple valid --problem arguments are given, 
     ///     RepeatedArg "--problem" will be returned.
-    /// * --help : Print a help message.
+    /// * --help/help/-h : Print a help message.
     /// If no options are given, NoArgs will be returned. --problem must be the
     /// only option, else TooManyArgs will be returned. If an unrecognized 
     /// option is given, BadArg "<arg>" will be returned.

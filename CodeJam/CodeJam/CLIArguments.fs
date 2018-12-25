@@ -1,6 +1,6 @@
 ﻿module CLIArguments
-    type Problem = TheLastWord | RankAndFile | CoinJam
-    type Arguments = {problem:Problem}
+    type Problem = TheLastWord | RankAndFile | CoinJam | None
+    type Arguments = {problem:Problem; help:bool}
     type ParsedArgs = 
         | Args of Arguments
         | NoArgs
@@ -23,6 +23,7 @@
     ///     If any other name is given, BadValue ("--problem", "<name>") will 
     ///     be returned. If multiple valid --problem arguments are given, 
     ///     RepeatedArg "--problem" will be returned.
+    /// * --help : Print a help message.
     /// If no options are given, NoArgs will be returned. --problem must be the
     /// only option, else TooManyArgs will be returned. If an unrecognized 
     /// option is given, BadArg "<arg>" will be returned.
@@ -33,9 +34,11 @@
             | problem::rest ->
                 let argRepresentation = 
                     match problem with
-                    | "rank-and-file" -> Args { problem = RankAndFile }
-                    | "the-last-word" -> Args { problem = TheLastWord }
-                    | "coin-jam" -> Args { problem = CoinJam }
+                    | "rank-and-file" -> 
+                        Args { problem = RankAndFile; help = false }
+                    | "the-last-word" -> 
+                        Args { problem = TheLastWord; help = false }
+                    | "coin-jam" -> Args { problem = CoinJam; help = false }
                     | _ -> BadValue ("--problem", problem)
                 match parseArgs rest with
                 | Args { problem = _ }
@@ -45,6 +48,7 @@
                 | NoArgs -> argRepresentation
                 | _ -> TooManyArgs
             | [] -> MissingValue "--problem"
+        | "--help"::_ -> Args { problem = None; help = true }
         | unrecognized::_ ->
             BadArg unrecognized
         | [] -> NoArgs

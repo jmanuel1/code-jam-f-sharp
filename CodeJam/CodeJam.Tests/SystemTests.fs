@@ -136,3 +136,12 @@ type ``Gives a help message``()=
         Program.main [||] |> ignore
         Assert.IsFalse(string newOut |> String.IsNullOrWhiteSpace)
         Console.SetOut(originalOut)
+
+    [<TestMethod>]
+    member this.``When passed --help as an argument``() =
+        let originalOut = Console.Out
+        let newOut = new IO.StringWriter()
+        Console.SetOut(newOut)
+        Program.main [|"--help"|] |> ignore
+        Assert.IsFalse(string newOut |> String.IsNullOrWhiteSpace)
+        Console.SetOut(originalOut)

@@ -4,7 +4,7 @@ open Output
 type Solution = | Solution of seq<TestCaseOutput>
 
 let usageMessage =
-    "This program takes a single argument --problem which can take the " +
+    "This program can take a single argument --problem which can take the " +
     "following values\n" +
     "rank-and-file : run a solution to the 2016 Round 1a 'Rank and File' " +
     "problem\n" +
@@ -12,6 +12,8 @@ let usageMessage =
     "problem\n" + 
     "coin-jam : run a solution to the 2016 Qualification Round 'Coin Jam' " +
     "problem\n\n" +
+    "If no arguments are given, or the --help argument is given, this help " +
+    "message is printed\n\n" +
     "Input, just like in the real CodeJam, is fed through standard input."
 let printUsage () = printfn "%s" usageMessage
 
@@ -41,7 +43,7 @@ let handleArgParsingError err =
 let main argv = 
     let args = Array.toList argv |> parseArgs
     match args with
-    | Args { problem = problem } ->
+    | Args { problem = problem; help = false } ->
         let solution = 
             match problem with
             | RankAndFile -> 
@@ -51,6 +53,6 @@ let main argv =
             | CoinJam -> _2016_qu_coin_jam.solution |> Solution
         // run solution and print output
         solveAndOutput solution
-    | NoArgs -> printUsage()
+    | NoArgs | Args { help = true } -> printUsage()
     | err -> handleArgParsingError err
     0 // return an integer exit code

@@ -12,8 +12,8 @@ let usageMessage =
     "problem\n" + 
     "coin-jam : run a solution to the 2016 Qualification Round 'Coin Jam' " +
     "problem\n\n" +
-    "If no arguments are given, or the --help argument is given, this help " +
-    "message is printed\n\n" +
+    "If no arguments are given, or the --help/help argument is given, this " +
+    "help message is printed\n\n" +
     "Input, just like in the real CodeJam, is fed through standard input."
 let printUsage () = printfn "%s" usageMessage
 

@@ -128,29 +128,22 @@ type ``Upon success``()=
 [<TestClass>]
 type ``Gives a help message``()=
 
-    [<TestMethod>]
-    member this.``When passed no arguments``() =
+    member this.helpTest(args) =
         let originalOut = Console.Out
         let newOut = new IO.StringWriter()
         Console.SetOut(newOut)
-        Program.main [||] |> ignore
+        Program.main args |> ignore
         Assert.IsFalse(string newOut |> String.IsNullOrWhiteSpace)
         Console.SetOut(originalOut)
+
+    [<TestMethod>]
+    member this.``When passed no arguments``() =
+        this.helpTest([||])
 
     [<TestMethod>]
     member this.``When passed '--help' as an argument``() =
-        let originalOut = Console.Out
-        let newOut = new IO.StringWriter()
-        Console.SetOut(newOut)
-        Program.main [|"--help"|] |> ignore
-        Assert.IsFalse(string newOut |> String.IsNullOrWhiteSpace)
-        Console.SetOut(originalOut)
+        this.helpTest([|"--help"|])
 
     [<TestMethod>]
     member this.``When passed 'help' as an argument``() =
-        let originalOut = Console.Out
-        let newOut = new IO.StringWriter()
-        Console.SetOut(newOut)
-        Program.main [|"help"|] |> ignore
-        Assert.IsFalse(string newOut |> String.IsNullOrWhiteSpace)
-        Console.SetOut(originalOut)
+        this.helpTest([|"help"|])

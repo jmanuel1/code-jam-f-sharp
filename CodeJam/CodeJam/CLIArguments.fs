@@ -48,7 +48,8 @@
                 | NoArgs -> argRepresentation
                 | _ -> TooManyArgs
             | [] -> MissingValue "--problem"
-        | "--help"::_ | "help"::_ -> Args { problem = None; help = true }
+        | "--help"::_ | "help"::_  | "-h"::_ -> 
+            Args { problem = None; help = true }
         | unrecognized::_ ->
             BadArg unrecognized
         | [] -> NoArgs

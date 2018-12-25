@@ -147,3 +147,7 @@ type ``Gives a help message``()=
     [<TestMethod>]
     member this.``When passed 'help' as an argument``() =
         this.helpTest([|"help"|])
+
+    [<TestMethod>]
+    member this.``When passed '-h' as an argument``() =
+        this.helpTest([|"-h"|])

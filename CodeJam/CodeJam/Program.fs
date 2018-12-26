@@ -35,7 +35,7 @@ let handleArgParsingError err =
         | TooManyArgs ->
             "Too many arguments were passed.\n"
         (* Purposely not match Args _ b/c it wouldn't make sense to do so. *)
-    eprintfn "%s" message
+    eprintfn "Error: EARGS - %s" message
     printUsage()
     exit 1
 

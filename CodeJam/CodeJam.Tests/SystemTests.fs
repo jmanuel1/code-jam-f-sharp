@@ -67,6 +67,12 @@ type ``When invalid arguments are passed``() =
             Assert.AreEqual(1, exitCode)
         )
 
+    [<TestMethod>]
+    member this.``The error message must start with 'Error: EARGS - '``() =
+        this.testOverPossibleInvalidArguments (fun _ _ error ->
+            Assert.IsTrue(error.StartsWith("Error: EARGS - "))
+        )
+
 [<TestClass>]
 type ``When given '--problem rank-and-file' as arguments``() =
 

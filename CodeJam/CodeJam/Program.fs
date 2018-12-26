@@ -49,7 +49,10 @@ let handleArgParsingError err =
             "Too many arguments were passed.\nFix with: Checking for " +
                 "redundant or contradictory arguments."
         (* Purposely not match Args _ b/c it wouldn't make sense to do so. *)
-    eprintfn "Error: EARGS - %s" message
+    let helpURL = 
+        "https://github.com/jmanuel1/code-jam-f-sharp/blob/master/README.md" +
+            "#usage"
+    eprintfn "Error: EARGS - %s\n%s" message helpURL
     printUsage()
     exit 1
 

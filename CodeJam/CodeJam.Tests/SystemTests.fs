@@ -79,6 +79,12 @@ type ``When invalid arguments are passed``() =
             Assert.IsTrue(error.Contains("Fix with: "))
         )
 
+    [<TestMethod>]
+    member this.``The error message must contain a link to further info``() =
+        this.testOverPossibleInvalidArguments (fun _ _ error ->
+            Assert.IsTrue(error.Contains("https://"))
+        )
+
 [<TestClass>]
 type ``When given '--problem rank-and-file' as arguments``() =
 

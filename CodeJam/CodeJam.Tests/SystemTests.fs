@@ -73,6 +73,12 @@ type ``When invalid arguments are passed``() =
             Assert.IsTrue(error.StartsWith("Error: EARGS - "))
         )
 
+    [<TestMethod>]
+    member this.``The error message must suggest how to fix the error``() =
+        this.testOverPossibleInvalidArguments (fun _ _ error ->
+            Assert.IsTrue(error.Contains("Fix with: "))
+        )
+
 [<TestClass>]
 type ``When given '--problem rank-and-file' as arguments``() =
 

@@ -24,16 +24,30 @@ let handleArgParsingError err =
     let message =
         match err with
         | MissingValue arg ->
-            sprintf "Argument %s was not given a value.\n" arg
+            let format = 
+                new Printf.StringFormat<_> ("Argument %s was not " +
+                    "given a value.\nFix with: CodeJam %s <value>")
+            sprintf format arg arg
         | RepeatedArg arg ->
-            sprintf "Argument %s must not be given more than once.\n" arg
+            let format =
+                new Printf.StringFormat<_> ("Argument %s must not be given " +
+                    "more than once.\nFix with: Using the argument only once")
+            sprintf format arg
         | BadArg arg ->
-            sprintf "Argument %s is not recognized.\n" arg
+            let format =
+                new Printf.StringFormat<_> ("Argument %s is not " +
+                    "recognized.\nFix with: Checking for typos or reading " +
+                    "the help message below.")
+            sprintf format arg
         | BadValue (arg, value) ->
-            (sprintf "Argument %s was passed with the unrecognized value %s.\n"
-                arg value)
+            let format =
+                new Printf.StringFormat<_> ("Argument %s was passed with " +
+                    "the unrecognized value %s.\nFix with: Checking for " +
+                    "typos or reading the help message below.")
+            sprintf format arg value
         | TooManyArgs ->
-            "Too many arguments were passed.\n"
+            "Too many arguments were passed.\nFix with: Checking for " +
+                "redundant or contradictory arguments."
         (* Purposely not match Args _ b/c it wouldn't make sense to do so. *)
     eprintfn "Error: EARGS - %s" message
     printUsage()

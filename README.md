@@ -16,10 +16,13 @@ CodeJam --problem <problem-name>
 Like any other Code Jam solution, the input will be taken from stdin, and
 output will go to stdout.
 
-To get a usage message, run
+To get a usage message, run any of the following
 
 ```batchfile
 CodeJam
+CodeJam -h
+CodeJam help
+CodeJam --help
 ```
 
 A usage message is displayed when the arguments are invalid, too.
@@ -27,10 +30,16 @@ A usage message is displayed when the arguments are invalid, too.
 ## Available solutions
 
 | Name            | Link to problem statement                                      |
-| ----------------| -------------------------------------------------------------- |
+| --------------- | -------------------------------------------------------------- |
 | `rank-and-file` | https://code.google.com/codejam/contest/4304486/dashboard#s=p1 |
 | `coin-jam`      | https://code.google.com/codejam/contest/6254486/dashboard#s=p2 |
 | `the-last-word` | https://code.google.com/codejam/contest/4304486/dashboard      |
+
+## Possible errors
+
+| Error code | Description                                               |
+| ---------- | --------------------------------------------------------- |
+| `EARGS`    | The program received an invalid combination of arguments. |
 
 # Reporting issues
 

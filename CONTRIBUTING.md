@@ -1,5 +1,7 @@
 [README](./README.md)
 
+[Code of Conduct](./CODE_OF_CONDUCT.md)
+
 Hi there! Thanks for taking the time to contribute. Just to be clear, this repo
 is meant to host *my* solutions to Code Jam problems. Thus, I won't accept pull
 requests for solutions from others, even if they're better. However, I'll

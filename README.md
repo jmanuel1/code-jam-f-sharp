@@ -45,6 +45,8 @@ A usage message is displayed when the arguments are invalid, too.
 
 Report issues on [GitHub](https://github.com/jmanuel1/code-jam-f-sharp/issues).
 
+# [Code of Conduct](./CODE_OF_CONDUCT.md)
+
 # Acknowledgements
 
 - If you want to learn more about F#, I suggest reading

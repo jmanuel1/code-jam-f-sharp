@@ -11,6 +11,8 @@ To run a Code Jam solution, type
 
 ```batchfile
 CodeJam --problem <problem-name>
+rem Waits for input.
+rem Outputs "Case #1:..."
 ```
 
 Like any other Code Jam solution, the input will be taken from stdin, and
@@ -23,6 +25,17 @@ CodeJam
 CodeJam -h
 CodeJam help
 CodeJam --help
+
+goto EndExampleOutput
+This program can take a single argument --problem which can take the following values
+rank-and-file : run a solution to the 2016 Round 1a 'Rank and File' problem
+the-last-word : run a solution to the 2016 Round 1a 'The Last Word' problem
+coin-jam : run a solution to the 2016 Qualification Round 'Coin Jam' problem
+
+If no arguments are given, or the --help/help/-h argument is given, then this help message is printed.
+
+Input, just like in the real CodeJam, is fed through standard input.
+:EndExampleOutput
 ```
 
 A usage message is displayed when the arguments are invalid, too.

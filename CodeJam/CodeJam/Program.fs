@@ -13,9 +13,17 @@ let usageMessage =
     "coin-jam : run a solution to the 2016 Qualification Round 'Coin Jam' " +
     "problem\n\n" +
     "If no arguments are given, or the --help/help/-h argument is given, " +
-    "then this help message is printed.\n\n" +
+    "then this help message is printed.\n" +
+    "If the --version/version/-V/-v argument is given, the version of this " +
+    "program is printed.\n\n" +
     "Input, just like in the real CodeJam, is fed through standard input."
 let printUsage () = printfn "%s" usageMessage
+
+let printVersion () =
+    let thisAssembly = typeof<Solution>.Assembly
+    let assemblyName = thisAssembly.GetName()
+    let versionString =  string assemblyName.Version
+    printfn "Version %s" versionString.[..String.length versionString - 3]
 
 let solveAndOutput (Solution solution) =
     for output in solution do printCaseOutput output
@@ -60,7 +68,7 @@ let handleArgParsingError err =
 let main argv = 
     let args = Array.toList argv |> parseArgs
     match args with
-    | Args { problem = problem; help = false } ->
+    | Args { problem = problem; help = false; showVersion = false } ->
         let solution = 
             match problem with
             | RankAndFile -> 
@@ -71,5 +79,6 @@ let main argv =
         // run solution and print output
         solveAndOutput solution
     | NoArgs | Args { help = true } -> printUsage()
+    | Args { showVersion = true } -> printVersion()
     | err -> handleArgParsingError err
     0 // return an integer exit code

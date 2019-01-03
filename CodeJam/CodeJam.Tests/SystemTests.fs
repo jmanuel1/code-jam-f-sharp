@@ -3,6 +3,7 @@
 open System
 open Microsoft.VisualStudio.TestTools.UnitTesting
 open System.Text
+open System.Text.RegularExpressions
 
 [<TestClass>]
 type ``When invalid arguments are passed``() =
@@ -169,3 +170,36 @@ type ``Gives a help message``()=
     [<TestMethod>]
     member this.``When passed '-h' as an argument``() =
         this.helpTest([|"-h"|])
+
+[<TestClass>]
+type ``Prints the program version to stdout``()=
+
+    member this.versionTest(args) =
+        let originalOut = Console.Out
+        let newOut = new IO.StringWriter()
+        Console.SetOut(newOut)
+        Program.main args |> ignore
+        Assert.IsFalse(string newOut |> String.IsNullOrWhiteSpace)
+        Assert.IsTrue(Regex.Split(string newOut, @"\s+") 
+            |> Array.exists (fun token ->
+                printf "%s" token
+                Regex.IsMatch(token, @"^\d+\.\d+\.\d+$")
+            )
+        )
+        Console.SetOut(originalOut)
+
+    [<TestMethod>]
+    member this.``When passed 'version' as an argument``() =
+        this.versionTest([|"version"|])
+
+    [<TestMethod>]
+    member this.``When passed '--version' as an argument``() =
+        this.versionTest([|"--version"|])
+          
+    [<TestMethod>]
+    member this.``When passed '-V' as an argument``() =
+        this.versionTest([|"-V"|])
+
+    [<TestMethod>]
+    member this.``When passed '-v' as an argument``() =
+        this.versionTest([|"-v"|])

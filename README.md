@@ -33,12 +33,24 @@ the-last-word : run a solution to the 2016 Round 1a 'The Last Word' problem
 coin-jam : run a solution to the 2016 Qualification Round 'Coin Jam' problem
 
 If no arguments are given, or the --help/help/-h argument is given, then this help message is printed.
+If the --version/version/-V/-v argument is given, the version of this program is printed.
 
 Input, just like in the real CodeJam, is fed through standard input.
 :EndExampleOutput
 ```
 
 A usage message is displayed when the arguments are invalid, too.
+
+To find out what version of CodeJam you're using, run any of the following
+
+```batchfile
+CodeJam -v
+CodeJam -V
+CodeJam version
+CodeJam --version
+
+rem Outputs "Version #.#.#"
+```
 
 ## Available solutions
 

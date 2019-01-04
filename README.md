@@ -5,6 +5,8 @@ wrote these solutions in 2016, and then ported them to F# and wrapped them in a
 CLI. They aren't optimal solutions--in fact, one of them is quite slow--but
 they are *my* solutions.
 
+![Demonstration GIF](./demo.gif)
+
 # Usage
 
 To run a Code Jam solution, type

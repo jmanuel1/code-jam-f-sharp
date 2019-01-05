@@ -49,6 +49,44 @@ CLI. The tests can be ran using Visual Studio's built-in test runner. The
 `CodeJam` project must be built for the Debug target before all the tests will
 pass.
 
+## Creating a demo GIF to put in the README
+
+Ensure that your Debug build of the `CodeJam` project is up-to-date.
+
+Make sure that [Terminalizer](https://github.com/faressoft/terminalizer) is
+installed.
+
+```batchfile
+npm install -g terminalizer
+```
+
+In the root of the repository, run
+
+```batchfile
+terminalizer record demo-gif-recording --config config\demo-gif-config
+```
+
+Terminalizer starts up PowerShell. Next, type the following lines:
+
+```powershell
+.\CodeJam --problem coin-jam
+1
+6 3
+.\CodeJam
+.\CodeJam -v
+exit
+```
+
+Now, Terminalizer's stored a recording of your PowerShell session in
+`demo-gif-recording.yml`. You can check out this recording by running
+`terminalizer play demo-gif-recording`.
+
+Next, render the recording into a GIF.
+
+```batchfile
+terminalizer render demo-gif-recording --output demo.gif
+```
+
 ## Release
 
 Releases should be made using GitHub's Release feature. Release tags should

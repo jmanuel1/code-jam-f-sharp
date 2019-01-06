@@ -47,7 +47,7 @@ can be built for both Debug and Release targets.
 The `CodeJam.Tests` project contains tests for the Code Jam solutions and the
 CLI. The tests can be ran using Visual Studio's built-in test runner. The
 `CodeJam` project must be built for the Debug target before all the tests will
-pass.
+pass, which is done for you if you build `CodeJam.Tests` for the Debug target.
 
 ## Creating a demo GIF to put in the README
 
